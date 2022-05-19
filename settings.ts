@@ -6,10 +6,10 @@ export interface SettingItem<T> {
 	desc?: string
 }
 
-export function display(obj: any, DEFAULT_SETTINGS: any) {
+export function display(obj: any, DEFAULT_SETTINGS: any, name: string) {
 	const { containerEl } = obj;
 	containerEl.empty();
-	containerEl.createEl('h2', { text: 'Settings for obsidian-columns' });
+	containerEl.createEl('h2', { text: 'Settings for ' + name });
 
 	let keyvals = Object.entries(DEFAULT_SETTINGS)
 
