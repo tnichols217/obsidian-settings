@@ -6,6 +6,22 @@ export interface SettingItem<T> {
 	desc?: string
 }
 
+let parseBoolean = (value: string) => {
+	return (value == "yes" || value == "true")
+}
+
+let parseObject = (value: any, typ: string) => {
+	if (typ == "string") {
+		return value
+	}
+	if (typ == "boolean") {
+		return parseBoolean(value)
+	}
+	if (typ == "number") {
+		return parseFloat(value)
+	}
+}
+
 export function display(obj: any, DEFAULT_SETTINGS: any, name: string) {
 	const { containerEl } = obj;
 	containerEl.empty();
@@ -31,7 +47,7 @@ export function display(obj: any, DEFAULT_SETTINGS: any, name: string) {
 				.setPlaceholder(String(keyval[1].value))
 				.setValue(String((obj.plugin.settings as any)[keyval[0]].value))
 				.onChange((value) => {
-					(obj.plugin.settings as any)[keyval[0]].value = obj.plugin.parseObject(value, typeof keyval[1].value)
+					(obj.plugin.settings as any)[keyval[0]].value = parseObject(value, typeof keyval[1].value)
 					obj.plugin.saveSettings()
 				})
 			)
