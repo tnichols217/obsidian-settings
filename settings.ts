@@ -22,6 +22,30 @@ let parseObject = (value: any, typ: string) => {
 	}
 }
 
+export function createSetting(containerEl: any, keyval: [string, SettingItem<any>], currentValue: any, onChange: (value: any, key: string) => void) {
+
+	let setting = new Setting(containerEl)
+			.setName(keyval[1].name)
+			.setDesc(keyval[1].desc)
+
+		if (typeof keyval[1].value == "boolean") {
+			setting.addToggle(toggle => toggle
+				.setValue(currentValue)
+				.onChange((bool) => {
+					onChange(bool, keyval[0])
+				})
+			)
+		} else {
+			setting.addText(text => text
+				.setPlaceholder(String(keyval[1].value))
+				.setValue(String(currentValue))
+				.onChange((value) => {
+					onChange(parseObject(value, typeof keyval[1].value), keyval[0])
+				})
+			)
+		}
+}
+
 export function display(obj: any, DEFAULT_SETTINGS: any, name: string) {
 	const { containerEl } = obj;
 	containerEl.empty();
@@ -30,28 +54,10 @@ export function display(obj: any, DEFAULT_SETTINGS: any, name: string) {
 	let keyvals = (Object.entries(DEFAULT_SETTINGS) as [string, SettingItem<any>][])
 
 	for (let keyval of keyvals) {
-		let setting = new Setting(containerEl)
-			.setName(keyval[1].name)
-			.setDesc(keyval[1].desc)
-
-		if (typeof keyval[1].value == "boolean") {
-			setting.addToggle(toggle => toggle
-				.setValue((obj.plugin.settings as any)[keyval[0]].value)
-				.onChange((bool) => {
-					(obj.plugin.settings as any)[keyval[0]].value = bool
-					obj.plugin.saveSettings()
-				})
-			)
-		} else {
-			setting.addText(text => text
-				.setPlaceholder(String(keyval[1].value))
-				.setValue(String((obj.plugin.settings as any)[keyval[0]].value))
-				.onChange((value) => {
-					(obj.plugin.settings as any)[keyval[0]].value = parseObject(value, typeof keyval[1].value)
-					obj.plugin.saveSettings()
-				})
-			)
-		}
+		createSetting(containerEl, keyval, (obj.plugin.settings as any)[keyval[0]].value, (value, key) => {
+			(obj.plugin.settings as any)[key].value = value
+			obj.plugin.saveSettings()
+		})
 	}
 }
 
