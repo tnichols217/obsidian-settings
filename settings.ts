@@ -27,7 +27,7 @@ export function display(obj: any, DEFAULT_SETTINGS: any, name: string) {
 	containerEl.empty();
 	containerEl.createEl('h2', { text: 'Settings for ' + name });
 
-	let keyvals = Object.entries(DEFAULT_SETTINGS)
+	let keyvals = (Object.entries(DEFAULT_SETTINGS) as [string, SettingItem<any>][])
 
 	for (let keyval of keyvals) {
 		let setting = new Setting(containerEl)
