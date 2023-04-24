@@ -4,6 +4,7 @@ export interface SettingItem<T> {
 	value: T
 	name?: string
 	desc?: string
+	onChange?: (value: T) => void
 }
 
 let parseBoolean = (value: string) => {
@@ -79,6 +80,7 @@ export async function saveSettings(obj: any, DEFAULT_SETTINGS: any) {
 	let saveData:any = {}
 	Object.entries(obj.settings).forEach((i) => {
 		saveData[i[0]] = (i[1] as SettingItem<any>).value
+		(i[1] as SettingItem<any>).onChange((i[1] as SettingItem<any>).value)
 	})
 	await obj.saveData(saveData);
 }
