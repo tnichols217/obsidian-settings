@@ -79,7 +79,7 @@ export async function loadSettings(obj: any, DEFAULT_SETTINGS: any) {
 export async function saveSettings(obj: any, DEFAULT_SETTINGS: any) {
 	let saveData:any = {}
 	Object.entries(obj.settings).forEach((i) => {
-		saveData[i[0]] = (i[1] as SettingItem<any>).value
+		saveData[i[0]] = (i[1] as SettingItem<any>).value;
 		(i[1] as SettingItem<any>).onChange((i[1] as SettingItem<any>).value)
 	})
 	await obj.saveData(saveData);
