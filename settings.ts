@@ -61,15 +61,17 @@ export function display(obj: any, DEFAULT_SETTINGS: any, name: string) {
 	}
 }
 
-export function loadSettings(obj: any, DEFAULT_SETTINGS: any) {
-	obj.settings = DEFAULT_SETTINGS
-	obj.loadData().then((data: any) => {
-		if (data) {
-			let items = Object.entries(data)
-			items.forEach((item:[string, string]) => {
-				(obj.settings as any)[item[0]].value = item[1]
-			})
-		}
+export async function loadSettings(obj: any, DEFAULT_SETTINGS: any) {
+	return new Promise<void>((resolve, reject) => {
+		obj.settings = DEFAULT_SETTINGS
+		obj.loadData().then((data: any) => {
+			if (data) {
+				let items = Object.entries(data)
+				items.forEach((item:[string, string]) => {
+					(obj.settings as any)[item[0]].value = item[1]
+				})
+			}
+		}).then(resolve).catch(reject)
 	})
 }
 
